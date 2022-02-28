@@ -34,4 +34,10 @@ public class StringCalculatorTest {
         }
         assertEquals(4950, stringCalculator.add(strToAdd.toString()));
     }
+
+    @Test
+    @DisplayName("Should be able to handle new line character")
+    public void shouldBeAbleToHandleNewLineCharacter(){
+        assertEquals(3,stringCalculator.add("1\n1,1"));
+    }
 }
