@@ -2,7 +2,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class StringCalculatorTest {
 
@@ -11,22 +10,28 @@ public class StringCalculatorTest {
     @Test
     @DisplayName("Empty string should return zero")
     public void emptyStringShouldReturnZero() {
-        int result = stringCalculator.add("");
-        assertEquals(0, result);
+        assertEquals(0, stringCalculator.add(""));
     }
 
     @Test
     @DisplayName("One plus nothing should return one")
-    public void OneShouldReturnOne(){
-        int result = stringCalculator.add("1");
-        assertEquals(1,result);
+    public void OneShouldReturnOne() {
+        assertEquals(1, stringCalculator.add("1"));
     }
 
     @Test
     @DisplayName("Two plus one should return 3")
     public void TwoPlusOneShouldReturnThree() {
-        int result = stringCalculator.add("2,1");
-        assertEquals(3,result);
+        assertEquals(3, stringCalculator.add("2,1"));
     }
 
+    @Test
+    @DisplayName("Add should be able to handle x amount of values")
+    public void shouldBeAbleToAddXAmountOfValues() {
+        StringBuilder strToAdd = new StringBuilder();
+        for (int i = 0; i < 100; i++) {
+            strToAdd.append(i).append(",");
+        }
+        assertEquals(4950, stringCalculator.add(strToAdd.toString()));
+    }
 }
