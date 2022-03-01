@@ -40,4 +40,11 @@ public class StringCalculatorTest {
     public void shouldBeAbleToHandleNewLineCharacter(){
         assertEquals(3,stringCalculator.add("1\n1,1"));
     }
+
+    @Test
+    @DisplayName("Should support delimiter string")
+    public void shouldSupportDelimiterString(){
+        assertEquals(4,stringCalculator.add("//;\n1;1;2"));
+    }
+
 }
