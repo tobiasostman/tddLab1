@@ -2,6 +2,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class StringCalculatorTest {
 
@@ -9,25 +10,25 @@ public class StringCalculatorTest {
 
     @Test
     @DisplayName("Empty string should return zero")
-    public void emptyStringShouldReturnZero() {
+    public void emptyStringShouldReturnZero() throws Exception {
         assertEquals(0, stringCalculator.add(""));
     }
 
     @Test
     @DisplayName("One plus nothing should return one")
-    public void OneShouldReturnOne() {
+    public void OneShouldReturnOne() throws Exception {
         assertEquals(1, stringCalculator.add("1"));
     }
 
     @Test
     @DisplayName("Two plus one should return 3")
-    public void TwoPlusOneShouldReturnThree() {
+    public void TwoPlusOneShouldReturnThree() throws Exception {
         assertEquals(3, stringCalculator.add("2,1"));
     }
 
     @Test
     @DisplayName("Add should be able to handle x amount of values")
-    public void shouldBeAbleToAddXAmountOfValues() {
+    public void shouldBeAbleToAddXAmountOfValues() throws Exception {
         StringBuilder strToAdd = new StringBuilder();
         for (int i = 0; i < 100; i++) {
             strToAdd.append(i).append(",");
@@ -37,14 +38,22 @@ public class StringCalculatorTest {
 
     @Test
     @DisplayName("Should be able to handle new line character")
-    public void shouldBeAbleToHandleNewLineCharacter(){
+    public void shouldBeAbleToHandleNewLineCharacter() throws Exception {
         assertEquals(3,stringCalculator.add("1\n1,1"));
     }
 
     @Test
     @DisplayName("Should support delimiter string")
-    public void shouldSupportDelimiterString(){
+    public void shouldSupportDelimiterString() throws Exception {
         assertEquals(4,stringCalculator.add("//;\n1;1;2"));
     }
 
+    @Test
+    @DisplayName("Should throw negative values not allowed")
+    public void shouldThrowNegativeValuesNotAllowed(){
+        Exception exception = assertThrows(Exception.class, () -> {
+            stringCalculator.add("1,-2,3,-4");
+        });
+        assertEquals("Negative values not allowed: [-2, -4]", exception.getMessage());
+    }
 }
