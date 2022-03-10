@@ -1,12 +1,22 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 public class StringCalculatorTest {
 
-    StringCalculator stringCalculator = new StringCalculator();
+    StringCalculator stringCalculator;
+    ILogger mockLogger;
+
+    @BeforeEach
+    void init() {
+        mockLogger = mock(LoggerStub.class);
+        stringCalculator = new StringCalculator(mockLogger);
+    }
+
 
     @Test
     @DisplayName("Empty string should return zero")
@@ -39,21 +49,28 @@ public class StringCalculatorTest {
     @Test
     @DisplayName("Should be able to handle new line character")
     public void shouldBeAbleToHandleNewLineCharacter() throws Exception {
-        assertEquals(3,stringCalculator.add("1\n1,1"));
+        assertEquals(3, stringCalculator.add("1\n1,1"));
     }
 
     @Test
     @DisplayName("Should support delimiter string")
     public void shouldSupportDelimiterString() throws Exception {
-        assertEquals(4,stringCalculator.add("//;\n1;1;2"));
+        assertEquals(4, stringCalculator.add("//;\n1;1;2"));
     }
 
     @Test
     @DisplayName("Should throw negative values not allowed")
-    public void shouldThrowNegativeValuesNotAllowed(){
+    public void shouldThrowNegativeValuesNotAllowed() {
         Exception exception = assertThrows(Exception.class, () -> {
             stringCalculator.add("1,-2,3,-4");
         });
         assertEquals("Negative values not allowed: [-2, -4]", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should log numbers bigger then 1000")
+    public void shouldLogNumbersBiggerThen1000() throws Exception {
+        stringCalculator.add("1000,10,1000");
+        verify(mockLogger, times(2)).log(1000);
     }
 }
