@@ -1,6 +1,10 @@
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -8,6 +12,8 @@ import static org.mockito.Mockito.*;
 
 public class StringCalculatorTest {
 
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
     StringCalculator stringCalculator;
     ILogger mockLogger;
 
@@ -15,6 +21,12 @@ public class StringCalculatorTest {
     void init() {
         mockLogger = mock(LoggerStub.class);
         stringCalculator = new StringCalculator(mockLogger);
+        System.setOut(new PrintStream(outContent));
+    }
+
+    @AfterEach
+    void destroy() {
+        System.setOut(originalOut);
     }
 
 
@@ -72,5 +84,16 @@ public class StringCalculatorTest {
     public void shouldLogNumbersBiggerThen1000() throws Exception {
         stringCalculator.add("1000,10,1000");
         verify(mockLogger, times(2)).log(1000);
+    }
+
+    @Test
+    @DisplayName("Should greet user")
+    public void shouldGreetUser() {
+        String[] args = new String[0];
+        StringCalculator.main(args);
+
+        String expectedOutPut = "Welcome to string calculator 6000\r\n" + "To calculate a string type \"scalc '1,2,3'\"\r\n" + "To exit type: \"exit\"\r\n";
+
+        assertEquals(expectedOutPut, outContent.toString());
     }
 }
