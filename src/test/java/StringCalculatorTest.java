@@ -123,4 +123,22 @@ public class StringCalculatorTest {
 
         System.setIn(originalIn);
     }
+
+    @Test
+    @DisplayName("Should calculate multiple lines of user input")
+    public void ShouldCalculateMultipleLines(){
+        InputStream in = new ByteArrayInputStream("scalc '1,2,3'\nscalc '2,4,7'\nscalc '2,3,5'\nexit\n".getBytes());
+        System.setIn(in);
+
+        String[] args = new String[0];
+        Main.main(args);
+
+        String[] outs = outContent.toString().split("\n");
+
+        assertEquals("Result is: 6\r", outs[4]);
+        assertEquals("Result is: 13\r", outs[6]);
+        assertEquals("Result is: 10\r", outs[8]);
+
+        System.setIn(originalIn);
+    }
 }
