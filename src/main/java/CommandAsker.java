@@ -14,9 +14,13 @@ public class CommandAsker {
 
     public String ask(String message) {
         printStream.println(message);
-        return scanner.nextLine();
+        String input = scanner.nextLine();
+        if (input.contains("]") && scanner.hasNextLine()) {
+            input += "\n";
+            input += scanner.nextLine();
+        }
+        return input;
     }
-
 
 
 }

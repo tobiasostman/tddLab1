@@ -70,7 +70,7 @@ public class StringCalculatorTest {
     @Test
     @DisplayName("Should support delimiter string")
     public void shouldSupportDelimiterString() throws Exception {
-        assertEquals(4, stringCalculator.add("//;\n1;1;2"));
+        assertEquals(4, stringCalculator.add("//[;]\n1;1;2"));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class StringCalculatorTest {
 
     @Test
     @DisplayName("Should calculate multiple lines of user input")
-    public void ShouldCalculateMultipleLines(){
+    public void ShouldCalculateMultipleLines() {
         InputStream in = new ByteArrayInputStream("scalc '1,2,3'\nscalc '2,4,7'\nscalc '2,3,5'\nexit\n".getBytes());
         System.setIn(in);
 
@@ -140,5 +140,28 @@ public class StringCalculatorTest {
         assertEquals("Result is: 10\r", outs[8]);
 
         System.setIn(originalIn);
+    }
+
+    @Test
+    @DisplayName("Should support complex delimters")
+    public void ShouldSupportComplexDelimiters() {
+        InputStream in = new ByteArrayInputStream("scalc '//[***][%%%]\n1***2%%%4'\nexit".getBytes());
+
+        System.setIn(in);
+
+        String[] args = new String[0];
+        Main.main(args);
+
+        String[] outs = outContent.toString().split("\n");
+
+        assertEquals("Result is: 7\r", outs[4]);
+
+        System.setIn(originalIn);
+    }
+
+    @Test
+    @DisplayName("Should support multiple delimters")
+    public void ShouldSupportMultipleDelimters() throws Exception {
+        assertEquals(4, stringCalculator.add("//[***][%%%]\n1***1%%%2"));
     }
 }

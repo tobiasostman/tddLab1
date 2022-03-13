@@ -1,7 +1,5 @@
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class StringCalculator {
@@ -13,8 +11,11 @@ public class StringCalculator {
         this.logger = logger;
     }
 
+    public static void main(String[] args) throws Exception {
+        StringCalculator stringCalculator = new StringCalculator(new LoggerStub());
 
-
+        stringCalculator.add("//[***][%%%]\n1***2%%%2");
+    }
 
     public int add(String numbers) throws Exception {
 
@@ -35,12 +36,17 @@ public class StringCalculator {
     }
 
     private String[] getDelimiterAndNewString(String numbers) {
-        if (numbers.startsWith("//")) {
-            String[] delimiter = numbers.split("\n", 2);
-            delimiter[0] = delimiter[0].replace("//", "");
-            return delimiter;
+        if (!numbers.startsWith("//")) return new String[]{",", numbers};
+
+        String[] delimiter = numbers.split("\n", 2);
+        delimiter[0] = delimiter[0].replace("//", "");
+        String[] delimiters = delimiter[0].split("]");
+        delimiter[0] = ",";
+        for (String delim : delimiters) {
+            String target = delim.replace("[", "");
+            delimiter[1] = delimiter[1].replace(target, ",");
         }
-        return new String[]{",", numbers};
+        return delimiter;
     }
 
     private void containsNegativeValues(List<Integer> nums) throws Exception {
