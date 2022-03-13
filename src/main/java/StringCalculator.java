@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -12,11 +13,8 @@ public class StringCalculator {
         this.logger = logger;
     }
 
-    public static void main(String[] args) {
-        System.out.println("Welcome to string calculator 6000");
-        System.out.println("To calculate a string type \"scalc '1,2,3'\"");
-        System.out.println("To exit type: \"exit\"");
-    }
+
+
 
     public int add(String numbers) throws Exception {
 

@@ -3,7 +3,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,6 +16,7 @@ public class StringCalculatorTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+    private final InputStream originalIn = System.in;
     StringCalculator stringCalculator;
     ILogger mockLogger;
 
@@ -89,11 +92,35 @@ public class StringCalculatorTest {
     @Test
     @DisplayName("Should greet user")
     public void shouldGreetUser() {
-        String[] args = new String[0];
-        StringCalculator.main(args);
 
-        String expectedOutPut = "Welcome to string calculator 6000\r\n" + "To calculate a string type \"scalc '1,2,3'\"\r\n" + "To exit type: \"exit\"\r\n";
+        InputStream in = new ByteArrayInputStream("exit\n".getBytes());
+        System.setIn(in);
+
+        String[] args = new String[0];
+        Main.main(args);
+
+        String expectedOutPut = "Welcome to string calculator 6000\r\n" + "To calculate a string type \"scalc '1,2,3'\"\r\n"
+                + "To exit type: \"exit\"\r\n" + "Enter a command: \r\n";
 
         assertEquals(expectedOutPut, outContent.toString());
+
+        System.setIn(originalIn);
+    }
+
+    @Test
+    @DisplayName("should calculate 1,2,3")
+    public void shouldCalculateUserInput() {
+
+        InputStream in = new ByteArrayInputStream("scalc '1,2,3'\nexit\n".getBytes());
+        System.setIn(in);
+
+        String[] args = new String[0];
+        Main.main(args);
+
+        String[] outs = outContent.toString().split("\n");
+
+        assertEquals("Result is: 6\r", outs[4]);
+
+        System.setIn(originalIn);
     }
 }
